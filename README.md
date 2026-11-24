@@ -1,26 +1,54 @@
 # Hubble's Constant — Astronomical Spectra Analysis
 
-A Python project analysing astronomical spectral observations to estimate Hubble's constant using spectral-line fitting, redshift calculations and weighted linear regression.
+## Overview
 
-## Project Overview
+This project analyses approximately 30 Hβ astronomical spectra to estimate the recession velocities of galaxies and investigate the relationship between recession velocity and distance.
 
-This project was completed as part of the Year 1 Computing Project at Imperial College London (2025–2026).
+The main objective is to estimate Hubble's constant by fitting spectral peaks, calculating redshift velocities and applying weighted linear regression to the resulting velocity–distance data.
 
-The aim was to analyse approximately 30 Hβ spectral observations, determine the recession velocities of galaxies from their redshift measurements, and investigate the relationship between recession velocity and distance to estimate Hubble's constant.
+The project combines experimental data processing, nonlinear curve fitting, uncertainty propagation and statistical analysis using Python.
 
-## Methodology
+## Objectives
 
-The Python script carries out the following steps:
+- Process approximately 30 astronomical Hβ spectra.
+- Fit Gaussian profiles with linear backgrounds to determine observed spectral peak frequencies.
+- Estimate uncertainties in fitted peak positions using the parameter covariance matrix.
+- Convert observed frequencies into wavelengths and calculate recession velocities using the relativistic Doppler equation.
+- Filter and match valid spectral observations to their corresponding galaxy distances.
+- Use weighted linear regression to investigate the relationship between recession velocity and distance.
+- Estimate Hubble's constant and its uncertainty from the fitted gradient.
 
-1. **Spectral data processing:** Imports the Hβ spectral observations using pandas and processes the frequency and intensity measurements for each observation.
+## Methods
 
-2. **Gaussian curve fitting:** Uses SciPy's `curve_fit` to fit a Gaussian peak with a linear background to each spectrum, extracting the observed peak frequency and its uncertainty from the parameter covariance matrix.
+### 1. Spectral data processing and Gaussian fitting
 
-3. **Wavelength and redshift calculations:** Converts the fitted peak frequencies into observed wavelengths and calculates galaxy recession velocities using the relativistic Doppler equation, propagating measurement uncertainties.
+The Python script imports the Hβ spectral observations using pandas and processes the frequency and intensity measurements for each spectrum.
 
-4. **Data filtering and matching:** Filters out observations with unacceptable instrument responses and matches the remaining observations to their corresponding galaxy distances.
+Each spectrum is fitted using a Gaussian profile with a linear background. SciPy's `curve_fit` function is used to estimate the model parameters, including the Gaussian amplitude, peak frequency and width, alongside the background gradient and intercept.
 
-5. **Weighted linear regression:** Fits recession velocity against distance using weighted linear regression, incorporating the velocity uncertainties to estimate the gradient and intercept, together with their uncertainties.
+The covariance matrix returned by the fitting procedure is used to estimate uncertainties in the fitted parameters, including the observed peak frequency.
+
+### 2. Wavelength and recession velocity calculations
+
+The fitted peak frequencies are converted into observed wavelengths using the relationship between frequency and wavelength.
+
+The recession velocity of each galaxy is then calculated using the relativistic Doppler equation, taking the rest wavelength of the Hβ spectral line as 486.1 nm.
+
+Uncertainties in the fitted peak frequencies are propagated through the wavelength and velocity calculations to obtain uncertainties in the recession velocities.
+
+### 3. Distance data filtering and matching
+
+The galaxy distance dataset is imported and processed separately from the spectral measurements.
+
+Observations with an unacceptable instrument response, identified by the response code `E`, are excluded. The remaining observations are matched to their corresponding galaxy distances using their observation numbers.
+
+### 4. Weighted linear regression
+
+The recession velocities are plotted against their corresponding galaxy distances.
+
+A weighted linear regression is performed using NumPy's `polyfit`, with weights determined by the inverse of the velocity uncertainties. The covariance matrix from the regression is used to estimate uncertainties in the fitted gradient and intercept.
+
+The gradient of the velocity–distance relationship provides the estimate of Hubble's constant.
 
 ## Results
 
@@ -28,39 +56,51 @@ The analysis produced an estimate of:
 
 **Hubble's constant = 65 ± 4.9 km s⁻¹ Mpc⁻¹**
 
-The final velocity–distance relationship is plotted with measurement error bars and the fitted linear regression.
+The final velocity–distance plot displays the matched galaxy observations, their recession velocity uncertainties and the fitted weighted linear regression.
 
-## Repository Contents
+## Technologies
 
-- `Hubble's Constant Computing Project.py` — Main Python analysis script.
-- `SpectralData_Hbeta.csv` — Supplied Hβ spectral observations.
-- `dist_data.txt` — Supplied galaxy distance and instrument response data.
-- `Redshift Velocity against Distance.png` — Final velocity–distance plot generated by the script.
+- **Python** — implementation of the data processing and analysis workflow.
+- **NumPy** — numerical calculations, uncertainty propagation and weighted linear regression.
+- **pandas** — importing and processing spectral and distance datasets.
+- **SciPy** — nonlinear Gaussian curve fitting using `curve_fit`.
+- **Matplotlib** — visualisation of individual spectra, fitted Gaussian profiles and the final velocity–distance relationship.
 
-## Requirements
+## Running the code
 
-The project uses the following Python libraries:
+### Requirements
 
-- NumPy
-- pandas
-- SciPy
-- Matplotlib
-
-Install the required packages using:
+Use Python 3 with the following packages installed:
 
 ```bash
-pip install numpy pandas scipy matplotlib
+python -m pip install numpy pandas scipy matplotlib
 ```
 
-## Running the Code
+### Repository contents
 
-1. Clone or download this repository.
-2. Ensure the Python script and both data files are in the same working directory.
-3. Install the required Python libraries.
-4. Open the Python script in Spyder or another Python IDE.
-5. Run the script.
+All files are located in the root directory of the repository:
 
-The script generates individual spectral plots with Gaussian fits, prints fitted parameters and calculated recession velocities, and produces the final recession velocity against distance plot with a weighted linear fit.
+- `Hubble's Constant Computing Project.py` — main Python analysis script.
+- `SpectralData_Hbeta.csv` — Hβ spectral observations.
+- `dist_data.txt` — galaxy distance and instrument response data.
+- `Redshift Velocity against Distance.png` — final velocity–distance plot generated by the script.
+- `README.md` — project documentation.
+
+### Running the script
+
+Ensure that the Python script and both data files are in the same working directory. Run the script using:
+
+```bash
+python "Hubble's Constant Computing Project.py"
+```
+
+The script processes the spectral observations, fits Gaussian profiles, calculates recession velocities and their uncertainties, matches the observations to galaxy distances, and performs the final weighted linear regression.
+
+### Figure outputs
+
+The script generates individual spectral plots showing the measured data and fitted Gaussian profiles. It also generates the final recession velocity against distance plot, including measurement error bars and the weighted linear regression.
+
+The final plot is saved as `Redshift Velocity against Distance.png` in the current working directory.
 
 ---
 
